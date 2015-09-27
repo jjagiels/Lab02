@@ -8,7 +8,7 @@ public class Deck {
 	private ArrayList<Card> cardDeck = new ArrayList<Card>();
 	
 	public Deck(){
-		String[] suits = {"diamond","heart","clubs","spade"};
+		String[] suits = {"diamonds","hearts","clubs","spade"};
 		int j = 0;
 		for(String suit : suits){
 			for (int i=2;i<=14;i++){

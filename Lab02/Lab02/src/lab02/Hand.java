@@ -4,43 +4,55 @@ import java.util.Arrays;
 
 public class Hand {
 	
-	private Card[] cardHand = new Card[5];
+	private static Card[] cardHand = new Card[5];
 	
 	public Hand(Deck x){
 		for(int i=0; i<=4; i++){
 			cardHand[i] = x.draw();
 		}
+		int[] rank = tally(cardHand);
 	}
-	
-	public Hand(Card[] y){
-		for(int i=0; i<=4; i++){
-			cardHand[i] = y[i];
-		}
-	}
-	
-	public String score(){
-		
-		String result = "";
-		
+	public static int[] tally(Card[] cardHand){
 		int rank[] = new int [13];
-		int suit[] = new int [4];
+		//int suit[] = new int [4];
 		
-		this.sort();
+		sort(cardHand);
 		
 		for(int i = 0; i<=4;i++){
-/*			if(rank[cardHand[i].getRank()] == null){
+	/*			if(rank[cardHand[i].getRank()] == null){
 				rank[cardHand[i].getRank()] = 0;
 			}*/
 			rank[cardHand[i].getRank()-2]++;
 		}
-		
-		//Hand scoring begins here.
-		
-		//Check Royal Flush
+		return rank;
+	}
+	
+	public static boolean isRoyalFlush(Card[] cardHand){
+		if(firstCard == 10 && isStraight() && isFlush())
+			return true;
+	}
+	public static boolean isFlush(){
 		boolean flush = false;
 		
 		if(cardHand[0].getSuit().equals(cardHand[4].getSuit()))
 			flush = true;
+	}
+	
+//	public Hand(Card[] y){
+//		for(int i=0; i<=4; i++){
+//			cardHand[i] = y[i];
+//		}
+//	}
+	
+	public double score(int[] rank){
+		
+
+		
+		//Hand scoring begins here.
+		
+		//Check Royal Flush
+	
+
 		
 		boolean straight = false;
 		
@@ -62,18 +74,18 @@ public class Hand {
 			straight=true;
 		
 		if(firstCard == 10 && straight && flush)
-			return "Royal Flush";
+			return 10;
 		//End Check Royal Flush
 		
 		//Check Straight Flush
 		if(straight && flush)
-			return "Straight Flush";
+			return 9;
 		//End Check Straight Flush
 		
 		//Check Four of a Kind
-		for(int numberOfRanks : rank){
-			if(numberOfRanks == 4){
-				return "Four of a Kind";
+		for(int i = 0; i<=12; i++){
+			if(rank[i] == 4){
+				return 8;
 			}
 		}
 		//End Check Four of a Kind
@@ -81,32 +93,36 @@ public class Hand {
 		//Check Full House
 		boolean threeOfAKind = false;
 		boolean pair = false;
-		for(int numberOfRanks : rank){
-			if(numberOfRanks == 3){
+		double hiHand = 0;
+		double lowHand = 0;
+		for(int i = 0; i<=12; i++){
+			if(rank[i] == 3){
 				 threeOfAKind = true;
+				 hiHand = i+2;
 			}
-			if(numberOfRanks == 2){
+			if(rank[i] == 2){
 				pair = true;
+				lowHand = i+2;
 			}
 		}
 		if (pair && threeOfAKind){
-			return "Full House";
+			return 7;
 		}
 		//End Check Full House
 		
 		//Check Flush
 		if(flush)
-			return "Flush";
+			return 6;
 		//End Check Flush
 		
 		//Check Straight
 		if(straight)
-			return "Straight";
+			return 5;
 		//End Check Straight
 		
 		//Check Three of a Kind
 		if(threeOfAKind)
-			return "Three of a Kind";
+			return 4;
 		//End Check Three of a Kind
 		
 		//Check Two Pair
@@ -116,22 +132,50 @@ public class Hand {
 				paircount++;
 		}
 		if(paircount==2)
-			return "Two Pair";
+			return 3;
 		//End Check Two Pair
 		
 		//Check Pair
 		if(pair)
-			return "One Pair";
+			return 2;
 		//End Check Pair
 		
 		//Check High Card
 		for(int i = 12; i>=0; i--){
-			if(rank[i] > 0)
-				return (i+2)+"";
+			if(rank[i] > 0){
+				if(i+2 == 14)
+					return 1.14;
+				else if(i+2 == 13)
+					return 1.13;
+				else if(i+2 == 12)
+					return 1.12;
+				else if(i+2 == 11)
+					return 1.11;
+				else if(i+2 == 10)
+					return 1.10;
+				else if(i+2 == 9)
+					return 1.09;
+				else if(i+2 == 8)
+					return 1.08;
+				else if(i+2 == 7)
+					return 1.07;
+				else if(i+2 == 6)
+					return 1.06;
+				else if(i+2 == 5)
+					return 1.05;
+				else if(i+2 == 4)
+					return 1.04;
+				else if(i+2 == 3)
+					return 1.03;
+				else if(i+2 == 2)
+					return 1.02;
+				else
+					return 1;
+			}
 		}
-		return "Something went wrong, you get to rummage through code now for three hours.";
+		return 0;
 	}
-	public void sort(){
+	public static void sort(Card[] cardHand){
 		for(int i=0; i<cardHand.length -1 ;i++){
 			int index = i;
 			for (int j = i+1; j<cardHand.length; j++)
